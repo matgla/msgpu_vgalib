@@ -1,8 +1,4 @@
- 
-// ********************************
-// * FILE AUTOMATICALLY GENERATED *
-// ********************************
-// This file is part of msgpu project.
+// This file is part of msgpu_libgl project.
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
@@ -18,13 +14,31 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
+#pragma once 
 
-#include <cstdint>
+#include "GL/gl.h"
+#include "GL/glu.h"
 
-
- 
-struct __attribute__((packed, aligned(1))) InfoReq
+#ifdef __cplusplus
+extern "C"
 {
+#endif
 
-};
+#define GLUT_DOUBLE 0 
+#define GLUT_RGB 0 
+#define GLUT_DEPTH 0 
+
+void glutInit(int *argcp, char **argv);
+
+void glutSwapBuffers();
+
+void glutInitDisplayMode(uint32_t mode);
+void glutCreateWindow(char* name);
+void glutDisplayFunc(void (*func)(void));
+void glutMainLoop(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+

@@ -1,8 +1,4 @@
- 
-// ********************************
-// * FILE AUTOMATICALLY GENERATED *
-// ********************************
-// This file is part of msgpu project.
+// This file is part of msgpu_libgl project.
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
@@ -18,14 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
+#pragma once 
 
-#include <cstdint>
+#include "GL/gl.h"
 
-
- 
-struct __attribute__((packed, aligned(1))) WriteText
+#ifdef __cplusplus
+extern "C"
 {
-    uint16_t size;
-    uint8 data[0];
-};
+#endif
+
+void gluLookAt(GLdouble eyeX, 
+    GLdouble eyeY,
+    GLdouble eyeZ,
+    GLdouble centerX, 
+    GLdouble centerY,
+    GLdouble centerZ,
+    GLdouble upX,
+    GLdouble upY,
+    GLdouble upZ
+);
+
+void gluPerspective(GLdouble fovy,
+    GLdouble aspect,
+    GLdouble zNear,
+    GLdouble zFar
+);
+
+#ifdef __cplusplus
+}
+#endif
+
+
+

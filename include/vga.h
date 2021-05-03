@@ -26,9 +26,13 @@ extern "C"
 #define __GLASTMODE G320x240x4K
 
 int vga_init();
+
+int vga_clear();
+
 int vga_setmode(int mode);
 int vga_setcolor(int color);
 int vga_drawpixel(int x, int y);
+int vga_drawline(int x1, int y1, int x2, int y2);
 
 #ifdef __cplusplus 
 }

@@ -15,12 +15,14 @@ int main(void)
         return EXIT_FAILURE;
 
     vga_setmode(G320x240x4K);
+    vga_clear();
     vga_setcolor(color);
-    vga_drawpixel(x, y);
+    vga_drawline(0, 0, 319, 239);
+    vga_drawline(319, 0, 0, 239);
+    vga_drawline(160, 0, 160, 239);
+    vga_drawline(0, 120, 319, 120);
 
-    sleep(seconds);
-
-    vga_setmode(TEXT);
+    // vga_setmode(TEXT);
 
     return EXIT_SUCCESS;
 }

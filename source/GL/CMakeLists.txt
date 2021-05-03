@@ -14,24 +14,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-add_library(msgpu_vgalib)
+add_library(msgpu_libgl)
 
-add_subdirectory(GL)
-
-target_sources(msgpu_vgalib
-    PUBLIC
-        ${PROJECT_SOURCE_DIR}/include/vga.h 
-
-    PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/vga.cpp
-)
-
-target_include_directories(msgpu_vgalib 
-    PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
-)
-
-target_link_libraries(msgpu_vgalib
+target_sources(msgpu_libgl 
     PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl/GL/gl.h
+        ${PROJECT_SOURCE_DIR}/include/libgl/GL/glu.h
+        ${PROJECT_SOURCE_DIR}/include/libgl/GL/glut.h
+    PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/gl.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/glu.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/glut.cpp
+)
+
+target_include_directories(msgpu_libgl BEFORE 
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl
+)
+
+target_link_libraries(msgpu_libgl 
+    PRIVATE 
         msgpu_messages
 )

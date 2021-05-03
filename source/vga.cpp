@@ -19,12 +19,34 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#include <iostream> 
+
+#include "messages/header.hpp"
+
+#include "messages/change_mode.hpp"
+#include "messages/draw_line.hpp"
+#include "messages/set_pixel.hpp"
+#include "messages/clear_screen.hpp"
+
 static int io_id;
+static int color;
 
 template <typename T>
-void write_msg(T& msg)
+void write_msg(T& msg, std::size_t size = 0)
 {
-    
+    Header header;
+    header.id = T::id;
+    if (size != 0)
+    {
+        header.size = size;
+    }
+    else 
+    {
+        header.size = sizeof(T);
+    }
+
+    write(io_id, &header, sizeof(Header));
+    write(io_id, &msg, header.size);
 }
 
 int vga_init()
@@ -33,19 +55,58 @@ int vga_init()
     return 0;
 }
 
+int vga_clear() 
+{
+    ClearScreen msg;
+    write_msg(msg);
+    return 0;
+}
+
 int vga_setmode(int mode) 
 {
-    
+    uint8_t new_mode = 0;
+    switch (mode) 
+    {
+        case TEXT: new_mode = 0; break;
+        case G320x240x4K: new_mode = 12; break;
+    }
+
+    ChangeMode msg {
+        .mode = new_mode
+    };
+
+    std::cout << "Changing mode to: " << static_cast<int>(new_mode) << std::endl;
+    write_msg(msg);
     return 0;
 }
 
 int vga_setcolor(int color)
 {
+    ::color = color;
     return 0;
 }
 
 int vga_drawpixel(int x, int y)
 {
+    SetPixel set = {
+        .x = static_cast<uint16_t>(x),
+        .y = static_cast<uint16_t>(y),
+        .color = static_cast<uint16_t>(::color)
+    };
+
+    write_msg(set);
     return 0;
+}
+
+int vga_drawline(int x1, int y1, int x2, int y2)
+{
+    DrawLine msg = {
+        .x1 = x1,
+        .y1 = y1, 
+        .x2 = x2, 
+        .y2 = y2 
+    };
+
+    write_msg(msg);
 }
 

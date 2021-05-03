@@ -1,8 +1,4 @@
- 
-// ********************************
-// * FILE AUTOMATICALLY GENERATED *
-// ********************************
-// This file is part of msgpu project.
+// This file is part of msgpu_libgl project.
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
@@ -18,14 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
+#include "GL/glu.h"
 
-#include <cstdint>
-
-
- 
-struct __attribute__((packed, aligned(1))) Header
+void gluLookAt(GLdouble eyeX, 
+    GLdouble eyeY,
+    GLdouble eyeZ,
+    GLdouble centerX, 
+    GLdouble centerY,
+    GLdouble centerZ,
+    GLdouble upX,
+    GLdouble upY,
+    GLdouble upZ
+)
 {
-    uint16_t id;
-    uint16_t size;
-};
+}
+
+void gluPerspective(GLdouble fovy,
+    GLdouble aspect,
+    GLdouble zNear,
+    GLdouble zFar
+)
+{
+}
+
+
+

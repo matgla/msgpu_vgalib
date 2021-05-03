@@ -14,24 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-add_library(msgpu_vgalib)
+add_executable(cube)
 
-add_subdirectory(GL)
-
-target_sources(msgpu_vgalib
-    PUBLIC
-        ${PROJECT_SOURCE_DIR}/include/vga.h 
-
+target_sources(cube 
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/vga.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/cube.c 
 )
 
-target_include_directories(msgpu_vgalib 
-    PUBLIC
-        ${PROJECT_SOURCE_DIR}/include
+target_link_libraries(cube 
+    PRIVATE 
+        msgpu_libgl
 )
 
-target_link_libraries(msgpu_vgalib
-    PUBLIC 
-        msgpu_messages
-)
+
