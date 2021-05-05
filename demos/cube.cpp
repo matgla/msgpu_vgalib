@@ -19,6 +19,10 @@
 
 #include <GL/gl.h>
 
+#include <iostream>
+#include <chrono>
+#include <thread>
+
 struct Vertex
 {
     GLfloat x;
@@ -91,6 +95,7 @@ int main(int argc, char* argv[])
 
     glutDisplayFunc(render);
 
+    std::this_thread::sleep_for(std::chrono::seconds(1));
     init();
 
     glutMainLoop();

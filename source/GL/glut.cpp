@@ -19,6 +19,8 @@
 #include <chrono>
 #include <thread>
 
+#include <iostream>
+
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -37,7 +39,8 @@ int io_id;
 
 void glutInit(int *argcp, char **argv)
 {
-    io_id = open("/tmp/msgpu_virtual_serial_1", O_RDWR);
+    std::cout << "Opening serial port: " << argv[1] << std::endl;
+    io_id = open(argv[1], O_RDWR);
  
 }
 
@@ -66,7 +69,7 @@ void glutMainLoop(void)
 {
     while (true) 
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(40));
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
         display_callback();
     }
 }
