@@ -16,6 +16,9 @@
 
 #include "GL/glut.h"
 
+#include <chrono>
+#include <thread>
+
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -63,7 +66,7 @@ void glutMainLoop(void)
 {
     while (true) 
     {
-        sleep(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(40));
         display_callback();
     }
 }
