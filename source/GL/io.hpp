@@ -19,6 +19,8 @@
 #include "messages/header.hpp"
 
 #include <unistd.h>
+#include <thread>
+#include <chrono>
 
 extern int io_id;
 
@@ -36,7 +38,11 @@ void write_msg(T& msg, std::size_t size = 0)
         header.size = sizeof(T);
     }
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     write(io_id, &header, sizeof(Header));
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
     write(io_id, &msg, header.size);
 }
 
