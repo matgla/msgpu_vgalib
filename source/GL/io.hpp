@@ -46,15 +46,13 @@ void write_msg(T& msg, std::size_t size = 0)
     write(io_id, &header, sizeof(Header));
     
     write(io_id, &msg, header.size);
-    std::this_thread::sleep_for(std::chrono::microseconds(1000));
     uint8_t msg_crc = 
         calculate_crc8(std::span<const uint8_t>(
             reinterpret_cast<const uint8_t*>(&msg), 
             sizeof(msg)
         )
     );
-    std::cerr << "CRC: " << std::hex << static_cast<int>(msg_crc) << std::endl;
     write(io_id, &msg_crc, sizeof(msg_crc));
-    std::this_thread::sleep_for(std::chrono::microseconds(1000));
+   // std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 

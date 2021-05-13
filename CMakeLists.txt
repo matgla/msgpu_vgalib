@@ -37,8 +37,9 @@ setup_mspkg(${mspkg_SOURCE_DIR})
 
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(msgpu_interface REQUIRED)
+
 add_subdirectory(source)
-add_subdirectory(interface)
 add_subdirectory(demos)
 
 add_executable(msgpu_test)

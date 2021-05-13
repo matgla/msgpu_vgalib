@@ -74,8 +74,8 @@ void glutSwapBuffers()
 void glutInitDisplayMode(uint32_t mode)
 {
     // TODO: implement
-    ChangeMode msg {.mode = 12 };
-    write_msg(msg);
+   // ChangeMode msg {.mode = 12 };
+   // write_msg(msg);
 }
 
 void glutCreateWindow(char* name)
