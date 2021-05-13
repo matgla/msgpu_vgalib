@@ -20,7 +20,6 @@
 
 #include <unistd.h>
 #include <thread>
-#include <iostream>
 #include <chrono>
 
 #include <eul/crc/crc.hpp>
@@ -42,19 +41,16 @@ void write_msg(T& msg, std::size_t size = 0)
         header.size = sizeof(T);
     }
 
+<<<<<<< HEAD
     header.crc = calculate_crc8(std::span<const uint8_t>(reinterpret_cast<const uint8_t*>(&header), 3));
+=======
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+>>>>>>> 332942aa55b58b5c1aff6a78e737ebebf1d86588
     write(io_id, &header, sizeof(Header));
     
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
     write(io_id, &msg, header.size);
-    std::this_thread::sleep_for(std::chrono::microseconds(1000));
-    uint8_t msg_crc = 
-        calculate_crc8(std::span<const uint8_t>(
-            reinterpret_cast<const uint8_t*>(&msg), 
-            sizeof(msg)
-        )
-    );
-    std::cerr << "CRC: " << std::hex << static_cast<int>(msg_crc) << std::endl;
-    write(io_id, &msg_crc, sizeof(msg_crc));
-    std::this_thread::sleep_for(std::chrono::microseconds(1000));
 }
+
 
