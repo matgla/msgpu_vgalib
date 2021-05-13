@@ -16,6 +16,9 @@
 
 #include "GL/glu.h"
 
+#include "io.hpp"
+#include "messages/set_perspective.hpp"
+
 void gluLookAt(GLdouble eyeX, 
     GLdouble eyeY,
     GLdouble eyeZ,
@@ -35,6 +38,14 @@ void gluPerspective(GLdouble fovy,
     GLdouble zFar
 )
 {
+    SetPerspective msg {
+        .view_angle = static_cast<float>(fovy),
+        .aspect = static_cast<float>(aspect),
+        .z_near = static_cast<float>(zNear),
+        .z_far = static_cast<float>(zFar)
+    };
+
+    write_msg(msg);
 }
 
 

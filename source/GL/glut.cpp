@@ -16,8 +16,15 @@
 
 #include "GL/glut.h"
 
+#include <chrono>
+#include <thread>
+
+#include <iostream>
+
 #include <unistd.h>
 #include <fcntl.h>
+#include <termios.h> 
+#include <sys/ioctl.h>
 
 #include "messages/header.hpp"
 
@@ -35,8 +42,27 @@ int io_id;
 
 void glutInit(int *argcp, char **argv)
 {
-    io_id = open("/tmp/msgpu_virtual_serial_1", O_RDWR);
- 
+    std::cout << "Opening serial port: " << argv[1] << std::endl;
+    io_id = open(argv[1], O_RDWR | O_NOCTTY | O_SYNC);
+
+    termios tty;
+    
+    if (tcgetattr(io_id, &tty) != 0)
+    {
+        std::cout << "tcgetattr() failed for serial port" << std::endl;
+    }
+
+    cfsetispeed(&tty, B115200);
+    cfsetospeed(&tty, B115200);
+    tty.c_iflag &= ~(INLCR | IGNCR | ICRNL | IXON | IXOFF);
+    tty.c_oflag &= ~(ONLCR | OCRNL);
+    tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+    
+
+    if (tcsetattr(io_id, TCSANOW, &tty) != 0)
+    {
+        std::cout << "tcsetaddr() failed" << std::endl;
+    }
 }
 
 void glutSwapBuffers()
@@ -65,9 +91,8 @@ void glutMainLoop(void)
 {
     while (true) 
     {
-        sleep(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
         display_callback();
     }
 }
-
 

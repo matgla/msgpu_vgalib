@@ -69,6 +69,17 @@ void glVertex3fv(const GLfloat* v)
     write_msg(msg);
 }
 
+void glVertex3f(GLfloat x, GLfloat y, GLfloat z)
+{
+    WriteVertex msg {
+        .x = x,
+        .y = y, 
+        .z = z
+    };
+
+    write_msg(msg);
+}
+
 void glClear(GLbitfield mask)
 {
     ClearScreen msg;

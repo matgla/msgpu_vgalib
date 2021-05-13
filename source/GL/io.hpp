@@ -19,6 +19,8 @@
 #include "messages/header.hpp"
 
 #include <unistd.h>
+#include <thread>
+#include <chrono>
 
 #include <eul/crc/crc.hpp>
 
@@ -40,8 +42,11 @@ void write_msg(T& msg, std::size_t size = 0)
     }
 
     header.crc = calculate_crc8(std::span<const uint8_t>(reinterpret_cast<const uint8_t*>(&header), 3));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     write(io_id, &header, sizeof(Header));
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
     write(io_id, &msg, header.size);
 }
-
 

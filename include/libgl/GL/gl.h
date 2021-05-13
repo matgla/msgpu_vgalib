@@ -50,6 +50,7 @@ void glBegin(GLenum mode);
 void glEnd();
 
 void glNormal3fv(const GLfloat* v);
+void glVertex3f(GLfloat x, GLfloat y, GLfloat z);
 void glVertex3fv(const GLfloat* v);
 
 void glClear(GLbitfield mask);

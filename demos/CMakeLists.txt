@@ -18,7 +18,7 @@ add_executable(cube)
 
 target_sources(cube 
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/cube.c 
+        ${CMAKE_CURRENT_SOURCE_DIR}/cube.cpp
 )
 
 target_link_libraries(cube 
