@@ -32,7 +32,10 @@ target_include_directories(msgpu_libgl BEFORE
         ${PROJECT_SOURCE_DIR}/include/libgl
 )
 
+find_package(eul REQUIRED)
+
 target_link_libraries(msgpu_libgl 
     PRIVATE 
         msgpu_messages
+        eul_crc
 )

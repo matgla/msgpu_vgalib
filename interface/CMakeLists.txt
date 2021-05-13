@@ -1,1 +1,1 @@
-../../msgpu/build/messages/cpp/CMakeLists.txt
+../../msgpu_pico_git/build/messages/cpp/CMakeLists.txt

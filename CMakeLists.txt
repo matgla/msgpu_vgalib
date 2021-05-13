@@ -18,6 +18,23 @@ cmake_minimum_required(VERSION 3.20)
 
 project (msgpu_vgalib C CXX) 
 
+find_package (Python3 COMPONENTS Interpreter) 
+
+include(FetchContent)
+
+FetchContent_Declare(
+  mspkg
+  GIT_REPOSITORY https://github.com/matgla/mspkg.git
+  GIT_TAG        master
+)
+
+FetchContent_MakeAvailable(mspkg)
+
+set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${mspkg_SOURCE_DIR}/cmake)
+include (mspkg)
+
+setup_mspkg(${mspkg_SOURCE_DIR})
+
 set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(source)

@@ -25,6 +25,7 @@
 #include "messages/draw_line.hpp"
 #include "messages/set_pixel.hpp"
 #include "messages/clear_screen.hpp"
+#include "messages/swap_buffer.hpp"
 
 #include "io.hpp"
 
@@ -40,7 +41,8 @@ void glutInit(int *argcp, char **argv)
 
 void glutSwapBuffers()
 {
-    // Double buffering is not supported on MSGPU v1
+    SwapBuffer msg; 
+    write_msg(msg);
 }
 
 void glutInitDisplayMode(uint32_t mode)

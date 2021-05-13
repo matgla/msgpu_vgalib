@@ -20,6 +20,8 @@
 
 #include <unistd.h>
 
+#include <eul/crc/crc.hpp>
+
 extern int io_id;
 
 template <typename T>
@@ -27,6 +29,7 @@ void write_msg(T& msg, std::size_t size = 0)
 {
     Header header;
     header.id = T::id;
+
     if (size != 0)
     {
         header.size = size;
@@ -36,6 +39,7 @@ void write_msg(T& msg, std::size_t size = 0)
         header.size = sizeof(T);
     }
 
+    header.crc = calculate_crc8(std::span<const uint8_t>(reinterpret_cast<const uint8_t*>(&header), 3));
     write(io_id, &header, sizeof(Header));
     write(io_id, &msg, header.size);
 }
