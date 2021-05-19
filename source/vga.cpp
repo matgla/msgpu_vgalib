@@ -36,17 +36,9 @@ void write_msg(T& msg, std::size_t size = 0)
 {
     Header header;
     header.id = T::id;
-    if (size != 0)
-    {
-        header.size = size;
-    }
-    else 
-    {
-        header.size = sizeof(T);
-    }
 
     write(io_id, &header, sizeof(Header));
-    write(io_id, &msg, header.size);
+    write(io_id, &msg, sizeof(T));
 }
 
 int vga_init()

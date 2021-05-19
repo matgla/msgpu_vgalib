@@ -58,8 +58,6 @@ const Mesh mesh {
 };
 void render()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glBegin(GL_TRIANGLES);
         for (int i = 0; i < 12; ++i)
         {
@@ -71,6 +69,8 @@ void render()
     glEnd();
 
     glutSwapBuffers();
+
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void init()

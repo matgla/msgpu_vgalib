@@ -52,8 +52,8 @@ void glutInit(int *argcp, char **argv)
         std::cout << "tcgetattr() failed for serial port" << std::endl;
     }
 
-    cfsetispeed(&tty, B115200);
-    cfsetospeed(&tty, B115200);
+    cfsetispeed(&tty, B230400);
+    cfsetospeed(&tty, B230400);
     tty.c_iflag &= ~(INLCR | IGNCR | ICRNL | IXON | IXOFF);
     tty.c_oflag &= ~(ONLCR | OCRNL);
     tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
