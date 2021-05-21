@@ -34,13 +34,25 @@ void write_msg(T& msg, std::size_t size = 0)
     Header header;
     header.id = T::id;
 
-    write(io_id, &header, sizeof(Header));
-    uint8_t buffer[64];
-   
+    uint8_t buffer[8];
     std::memset(buffer, 0, sizeof(buffer));
-    write(io_id, buffer, 3);
-    std::memcpy(buffer, &msg, sizeof(T));
-    write(io_id, buffer, sizeof(buffer));
+//    std::memcpy(buffer, &header, sizeof(Header));
+//    std::memcpy(buffer + 4, &msg, sizeof(T));
+    buffer[0] = 1;
+    buffer[1] = 2;
+    buffer[2] = 3; 
+    buffer[3] = 4;
+    buffer[4] = 5;
+    buffer[5] = 6; 
+    buffer[6] = 7; 
+    buffer[7] = 8;
+    std::cout << std::endl;
+    for (const auto b : buffer)
+    {
+        std::cout << std::hex << int(b) << ",";
+    }
+    std::cout << std::endl;
+    write(io_id, &buffer[0], sizeof(buffer));
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     std::cout << "Sent!" << std::endl;
 }
