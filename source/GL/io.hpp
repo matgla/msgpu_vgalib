@@ -4,8 +4,7 @@
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
+// (at your option) any later version.  
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -34,26 +33,36 @@ void write_msg(T& msg, std::size_t size = 0)
     Header header;
     header.id = T::id;
 
-    uint8_t buffer[8];
+    uint8_t buffer[128];
+    Header h;
+    h.start_flag = 0x7e;
+    h.id = T::id; 
+    h.size = sizeof(T);
+
     std::memset(buffer, 0, sizeof(buffer));
-//    std::memcpy(buffer, &header, sizeof(Header));
-//    std::memcpy(buffer + 4, &msg, sizeof(T));
-    buffer[0] = 1;
-    buffer[1] = 2;
-    buffer[2] = 3; 
-    buffer[3] = 4;
-    buffer[4] = 5;
-    buffer[5] = 6; 
-    buffer[6] = 7; 
-    buffer[7] = 8;
-    std::cout << std::endl;
-    for (const auto b : buffer)
+    std::memcpy(buffer, &h, sizeof(h));
+    uint16_t header_crc = calculate_crc16(std::span<const uint8_t>(buffer, sizeof(Header)));
+ 
+    uint8_t* next_pos = buffer + sizeof(h);
+    std::memcpy(buffer + sizeof(h), &header_crc, sizeof(header_crc));
+    next_pos += sizeof(header_crc);
+    std::memcpy(next_pos, &msg, sizeof(T));
+    uint16_t message_crc = calculate_crc16(std::span<const uint8_t>(next_pos, sizeof(T)));
+    next_pos += sizeof(T);
+    std::memcpy(next_pos, &message_crc, sizeof(message_crc));
+    
+    std::span<const uint8_t> data(buffer, sizeof(Header) + sizeof(T) + 2 * sizeof(uint16_t));
+
+    std::cout << "Dump: {";
+    for (const auto b : data) 
     {
-        std::cout << std::hex << int(b) << ",";
+        std::cout << std::hex << "0x" << static_cast<int>(b) << ",";
     }
     std::cout << std::endl;
-    write(io_id, &buffer[0], sizeof(buffer));
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+   
+    write(io_id, data.data(), data.size()); 
     std::cout << "Sent!" << std::endl;
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(4));
 }
 

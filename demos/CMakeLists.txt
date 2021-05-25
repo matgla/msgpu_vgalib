@@ -26,4 +26,19 @@ target_link_libraries(cube
         msgpu_libgl
 )
 
+add_executable(triangle)
+
+target_sources(triangle
+    PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/triangle.cpp
+)
+
+target_link_libraries(triangle
+    PRIVATE 
+        msgpu_libgl
+        msgpu_messages
+        eul_crc
+)
+
+target_include_directories(triangle PRIVATE ${PROJECT_SOURCE_DIR}/source/GL)
 
