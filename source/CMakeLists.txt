@@ -17,6 +17,7 @@
 add_library(msgpu_vgalib)
 
 add_subdirectory(GL)
+add_subdirectory(GLFW)
 
 target_sources(msgpu_vgalib
     PUBLIC
@@ -29,9 +30,13 @@ target_sources(msgpu_vgalib
 target_include_directories(msgpu_vgalib 
     PUBLIC
         ${PROJECT_SOURCE_DIR}/include
+    PRIVATE 
+        ${PROJECT_SOURCE_DIR}/source/GL
 )
 
 target_link_libraries(msgpu_vgalib
     PUBLIC 
         msgpu_messages
+    PRIVATE
+        eul_crc
 )

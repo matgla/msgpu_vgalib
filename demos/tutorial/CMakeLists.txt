@@ -14,35 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-add_executable(cube)
+add_executable (tutorial_triangle)
 
-target_sources(cube 
-    PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/cube.cpp
+target_sources (tutorial_triangle 
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/triangle.cpp 
 )
 
-target_link_libraries(cube 
-    PRIVATE 
-        msgpu_libgl
-        msgpu_libglut
-)
-
-add_executable(triangle)
-
-target_sources(triangle
-    PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/triangle.cpp
-)
-
-target_link_libraries(triangle
+target_link_libraries(tutorial_triangle
     PRIVATE 
         msgpu_libgl
-        msgpu_libglut
-        msgpu_messages
-        eul_crc
+        msgpu_libglew
+        msgpu_glfw
 )
-
-target_include_directories(triangle PRIVATE ${PROJECT_SOURCE_DIR}/source/GL)
-
-add_subdirectory (tutorial)
 

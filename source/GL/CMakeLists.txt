@@ -20,14 +20,42 @@ target_sources(msgpu_libgl
     PUBLIC 
         ${PROJECT_SOURCE_DIR}/include/libgl/GL/gl.h
         ${PROJECT_SOURCE_DIR}/include/libgl/GL/glu.h
-        ${PROJECT_SOURCE_DIR}/include/libgl/GL/glut.h
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/gl.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/glu.cpp
+)
+
+add_library(msgpu_libglut)
+
+target_sources(msgpu_libglut 
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl/GL/glut.h
+    PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/glut.cpp
 )
 
-target_include_directories(msgpu_libgl BEFORE 
+target_include_directories(msgpu_libglut SYSTEM BEFORE 
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl
+)
+
+
+add_library(msgpu_libglew)
+
+target_sources(msgpu_libglew
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl/GL/glew.h
+    PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/glew.cpp
+)
+
+target_include_directories(msgpu_libglew SYSTEM BEFORE 
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl
+)
+
+
+target_include_directories(msgpu_libgl SYSTEM BEFORE 
     PUBLIC 
         ${PROJECT_SOURCE_DIR}/include/libgl
 )
@@ -35,6 +63,18 @@ target_include_directories(msgpu_libgl BEFORE
 find_package(eul REQUIRED)
 
 target_link_libraries(msgpu_libgl 
+    PRIVATE 
+        msgpu_messages
+        eul_crc
+)
+
+target_link_libraries(msgpu_libglew
+    PRIVATE 
+        msgpu_messages
+        eul_crc
+)
+
+target_link_libraries(msgpu_libglut 
     PRIVATE 
         msgpu_messages
         eul_crc

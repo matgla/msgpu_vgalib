@@ -28,7 +28,7 @@
 
 
 template <typename T>
-void write_msg(T& msg, std::size_t size = 0)
+void write_msg(int io_id, T& msg, std::size_t size = 0)
 {
     Header header;
     header.id = T::id;

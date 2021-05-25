@@ -14,35 +14,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-add_executable(cube)
+add_library(msgpu_glfw)
 
-target_sources(cube 
+target_sources(msgpu_glfw
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl/GLFW/glfw3.h
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/cube.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/glfw_window.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/glfw_io.cpp
 )
 
-target_link_libraries(cube 
+target_include_directories(msgpu_glfw SYSTEM BEFORE 
+    PUBLIC 
+        ${PROJECT_SOURCE_DIR}/include/libgl
     PRIVATE 
-        msgpu_libgl
-        msgpu_libglut
+        ${PROJECT_SOURCE_DIR}/source/GL
 )
 
-add_executable(triangle)
-
-target_sources(triangle
+target_link_libraries(msgpu_glfw
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/triangle.cpp
-)
-
-target_link_libraries(triangle
-    PRIVATE 
-        msgpu_libgl
-        msgpu_libglut
         msgpu_messages
         eul_crc
 )
 
-target_include_directories(triangle PRIVATE ${PROJECT_SOURCE_DIR}/source/GL)
-
-add_subdirectory (tutorial)
 

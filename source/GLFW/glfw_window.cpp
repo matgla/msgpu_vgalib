@@ -1,4 +1,4 @@
-// This file is part of msgpu_libgl project.
+// This file is part of msgpu_vgalib project.
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,11 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "GL/glut.h"
-
-#include <chrono>
-#include <thread>
-
+#include <cstdlib>
 #include <iostream>
 
 #include <unistd.h>
@@ -26,30 +22,28 @@
 #include <termios.h> 
 #include <sys/ioctl.h>
 
-#include "messages/header.hpp"
 
-#include "messages/change_mode.hpp"
-#include "messages/draw_line.hpp"
-#include "messages/set_pixel.hpp"
-#include "messages/clear_screen.hpp"
-#include "messages/swap_buffer.hpp"
+#include "GLFW/glfw3.h" 
 
 #include "io.hpp"
 
-static void (*display_callback)(void);
+#include "messages/swap_buffer.hpp"
 
 int io_id;
 
-void glutInit(int *argcp, char **argv)
+int glfwInit(void)
 {
-    std::cout << "Opening serial port: " << argv[1] << std::endl;
-    io_id = open(argv[1], O_RDWR | O_NOCTTY | O_SYNC);
+    const char* port = std::getenv("PORT");
+    std::cout << "Opening serial port: " << port << std::endl;
+
+    io_id = open(port, O_RDWR | O_NOCTTY | O_SYNC);
 
     termios tty;
     
     if (tcgetattr(io_id, &tty) != 0)
     {
         std::cout << "tcgetattr() failed for serial port" << std::endl;
+        return GLFW_FALSE;
     }
 
     cfsetispeed(&tty, B230400);
@@ -62,37 +56,40 @@ void glutInit(int *argcp, char **argv)
     if (tcsetattr(io_id, TCSANOW, &tty) != 0)
     {
         std::cout << "tcsetaddr() failed" << std::endl;
+        return GLFW_FALSE;
     }
+
+    return GLFW_TRUE;
 }
 
-void glutSwapBuffers()
+void glfwTerminate(void)
 {
-    SwapBuffer msg; 
+    close(io_id);
+}
+
+GLFWwindow* glfwCreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share)
+{
+
+}
+
+void glfwMakeContextCurrent(GLFWwindow* window)
+{
+}
+
+void glfwSwapBuffers(GLFWwindow* window)
+{
+    SwapBuffer msg;
     write_msg(io_id, msg);
 }
 
-void glutInitDisplayMode(uint32_t mode)
-{
-    // TODO: implement
-   // ChangeMode msg {.mode = 12 };
-   // write_msg(io_id, msg);
-}
-
-void glutCreateWindow(const char* name)
+void glfwPollEvents(void)
 {
 }
 
-void glutDisplayFunc(void (*func)(void))
+int glfwWindowShouldClose(GLFWwindow* window)
 {
-    display_callback = func;
 }
 
-void glutMainLoop(void)
-{
-    while (true) 
-    {
-        //std::this_thread::sleep_for(std::chrono::milliseconds(20));
-        display_callback();
-    }
-}
+
+
 

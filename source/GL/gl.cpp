@@ -44,13 +44,13 @@ uint8_t convert_mode(GLenum mode)
 void glBegin(GLenum mode)
 {
     BeginPrimitives msg { .type = convert_mode(mode) };
-    write_msg(msg);
+    write_msg(io_id, msg);
 }
 
 void glEnd() 
 {
     EndPrimitives msg; 
-    write_msg(msg);
+    write_msg(io_id, msg);
 }
 
 void glNormal3fv(const GLfloat* v)
@@ -66,7 +66,7 @@ void glVertex3fv(const GLfloat* v)
         .z = v[2]
     };
 
-    write_msg(msg);
+    write_msg(io_id, msg);
 }
 
 void glVertex3f(GLfloat x, GLfloat y, GLfloat z)
@@ -77,13 +77,13 @@ void glVertex3f(GLfloat x, GLfloat y, GLfloat z)
         .z = z
     };
 
-    write_msg(msg);
+    write_msg(io_id, msg);
 }
 
 void glClear(GLbitfield mask)
 {
     ClearScreen msg;
-    write_msg(msg);
+    write_msg(io_id, msg);
 }
 
 void glEnable(GLenum cap)
@@ -103,4 +103,15 @@ void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
 }
 
+constexpr uint8_t to_rgb332(float r, float g, float b)
+{
+    return static_cast<uint8_t>(r * 7) << 5
+        | static_cast<uint8_t>(g * 7) << 2
+        | static_cast<uint8_t>(b * 3);
+}
+
+void glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+{
+    
+}
 

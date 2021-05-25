@@ -1,4 +1,4 @@
-// This file is part of msgpu_libgl project.
+// This file is part of msgpu_vgalib project.
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
@@ -14,39 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "GL/glu.h"
+#pragma once 
 
-#include "io.hpp"
-#include "messages/set_perspective.hpp"
+#include "GL/gl.h"
 
-void gluLookAt(GLdouble eyeX, 
-    GLdouble eyeY,
-    GLdouble eyeZ,
-    GLdouble centerX, 
-    GLdouble centerY,
-    GLdouble centerZ,
-    GLdouble upX,
-    GLdouble upY,
-    GLdouble upZ
-)
+#ifdef __cplusplus
+extern "C" 
 {
-}
+#endif // __cplusplus
 
-void gluPerspective(GLdouble fovy,
-    GLdouble aspect,
-    GLdouble zNear,
-    GLdouble zFar
-)
-{
-    SetPerspective msg {
-        .view_angle = static_cast<float>(fovy),
-        .aspect = static_cast<float>(aspect),
-        .z_near = static_cast<float>(zNear),
-        .z_far = static_cast<float>(zFar)
-    };
+#define GLEW_OK 0
+#define GLEW_NO_ERROR 0 
 
-    write_msg(io_id, msg);
-}
+GLenum glewInit(void);
 
-
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 

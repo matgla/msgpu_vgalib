@@ -28,9 +28,13 @@ extern int io_id;
 typedef float GLfloat;
 typedef double GLdouble;
 typedef int GLint;
+typedef unsigned int GLuint;
 
 typedef uint32_t GLenum;
 typedef uint32_t GLbitfield;
+
+#define GL_TRUE 1
+#define GL_FALSE 0
 
 #define GL_QUADS 1 
 #define GL_TRIANGLES 2 
@@ -53,7 +57,11 @@ void glNormal3fv(const GLfloat* v);
 void glVertex3f(GLfloat x, GLfloat y, GLfloat z);
 void glVertex3fv(const GLfloat* v);
 
+// Clear API 
+
 void glClear(GLbitfield mask);
+void glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+
 void glEnable(GLenum cap);
 void glLightfv(GLenum light, GLenum pname, const GLfloat* params);
 void glMatrixMode(GLenum mode);

@@ -33,7 +33,7 @@ void glutInit(int *argcp, char **argv);
 void glutSwapBuffers();
 
 void glutInitDisplayMode(uint32_t mode);
-void glutCreateWindow(char* name);
+void glutCreateWindow(const char* name);
 void glutDisplayFunc(void (*func)(void));
 void glutMainLoop(void);
 
