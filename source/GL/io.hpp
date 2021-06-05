@@ -35,7 +35,6 @@ void write_msg(int io_id, T& msg, std::size_t size = 0)
 
     uint8_t buffer[128];
     Header h;
-    h.start_flag = 0x7e;
     h.id = T::id; 
     h.size = sizeof(T);
 
@@ -59,7 +58,9 @@ void write_msg(int io_id, T& msg, std::size_t size = 0)
         std::cout << std::hex << "0x" << static_cast<int>(b) << ",";
     }
     std::cout << std::endl;
-   
+ 
+    constexpr uint8_t start_flag = 0x7e;
+    write(io_id, &start_flag, sizeof(start_flag));
     write(io_id, data.data(), data.size()); 
     std::cout << "Sent!" << std::endl;
     
