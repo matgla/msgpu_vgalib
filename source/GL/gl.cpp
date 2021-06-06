@@ -115,3 +115,69 @@ void glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
     
 }
 
+
+void glEnableClientState(GLenum attrib)
+{
+}
+
+void glGenVertexArrays(GLsizei n, GLuint *arrays)
+{
+}
+
+void glGenBuffers(GLsizei n, GLuint *buffers)
+{
+}
+
+void glBindBuffer(GLenum target, GLuint buffer)
+{
+}
+
+void glBindVertexArray(GLuint array)
+{
+}
+
+void glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
+{
+}
+
+void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer)
+{
+}
+
+void glEnableVertexAttribArray(GLuint index)
+{
+}
+
+GLuint glCreateShader(GLenum shaderType)
+{
+}
+
+void glCompileShader(GLuint shader)
+{
+}
+
+GLuint glCreateProgram(void)
+{
+}
+
+void glAttachShader(GLuint program, 
+    GLuint shader)
+{
+}
+
+void glLinkProgram(GLuint program)
+{
+}
+
+void glUseProgram(GLuint program)
+{
+}
+
+void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length)
+{
+}
+
+void glDrawArrays(GLenum mode, GLint first, GLsizei count)
+{
+}
+

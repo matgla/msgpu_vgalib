@@ -17,6 +17,7 @@
 #pragma once 
 
 #include <stdint.h>
+#include <cstddef>
 
 #ifdef __cplusplus
 extern "C"
@@ -32,6 +33,10 @@ typedef unsigned int GLuint;
 
 typedef uint32_t GLenum;
 typedef uint32_t GLbitfield;
+typedef int GLsizei;
+typedef uint32_t GLsizeiptr;
+typedef bool GLboolean;
+typedef char GLchar;
 
 #define GL_TRUE 1
 #define GL_FALSE 0
@@ -49,6 +54,43 @@ typedef uint32_t GLbitfield;
 #define GL_DEPTH_TEST 0 
 #define GL_PROJECTION 0 
 #define GL_MODELVIEW 0 
+
+#define GL_VERTEX_ARRAY 0
+#define GL_COLOR_ARRAY 1
+
+#define GL_FLOAT 1 
+
+void glEnableClientState(GLenum attrib);
+
+void glGenVertexArrays(GLsizei n, GLuint *arrays);
+
+void glGenBuffers(GLsizei n, GLuint *buffers);
+
+#define GL_ARRAY_BUFFER 1
+void glBindBuffer(GLenum target, GLuint buffer);
+
+void glBindVertexArray(GLuint array);
+
+#define GL_STATIC_DRAW  1  
+#define GL_DYNAMIC_DRAW 2
+void glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage);
+
+void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
+
+void glEnableVertexAttribArray(GLuint index);
+
+#define GL_VERTEX_SHADER 1 
+#define GL_FRAGMENT_SHADER 2
+GLuint glCreateShader(GLenum shaderType);
+void glCompileShader(GLuint shader);
+GLuint glCreateProgram(void);
+void glAttachShader(GLuint program, 
+    GLuint shader);
+void glLinkProgram(GLuint program);
+void glUseProgram(GLuint program);
+void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length);
+
+void glDrawArrays(GLenum mode, GLint first, GLsizei count);
 
 void glBegin(GLenum mode);
 void glEnd();
