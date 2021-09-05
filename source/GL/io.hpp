@@ -1,6 +1,5 @@
 // This file is part of msgpu_libgl project.
 // Copyright (C) 2021 Mateusz Stadnik
-//
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -64,6 +63,6 @@ void write_msg(int io_id, T& msg, std::size_t size = 0)
     write(io_id, data.data(), data.size()); 
     std::cout << "Sent!" << std::endl;
     
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
