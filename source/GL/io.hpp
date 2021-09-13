@@ -63,6 +63,7 @@ void write_msg(int io_id, T& msg, std::size_t size = 0)
     write(io_id, data.data(), data.size()); 
     std::cout << "Sent!" << std::endl;
     
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
 }
 

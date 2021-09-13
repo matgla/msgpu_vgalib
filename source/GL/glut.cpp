@@ -23,7 +23,8 @@
 
 #include <unistd.h>
 #include <fcntl.h>
-#include <termios.h> 
+#include <termios.h>
+#include <sys/time.h>
 #include <sys/ioctl.h>
 
 #include "messages/header.hpp"
@@ -87,12 +88,25 @@ void glutDisplayFunc(void (*func)(void))
     display_callback = func;
 }
 
+uint64_t get_us()
+{
+    struct timeval tv;
+    gettimeofday(&tv, nullptr);
+    return tv.tv_sec*static_cast<uint64_t>(1000000) + tv.tv_usec;
+}
+
 void glutMainLoop(void)
 {
     while (true) 
     {
+        uint64_t ts = get_us(); 
         //std::this_thread::sleep_for(std::chrono::milliseconds(20));
         display_callback();
+
+        while (get_us() - ts < 16667)
+        {
+
+        }
     }
 }
 
