@@ -59,7 +59,7 @@ const Mesh mesh {
 void render()
 {
     glBegin(GL_TRIANGLES);
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < 12; ++i)
         {
             for (int j = 0; j < 3; ++j)
             {
