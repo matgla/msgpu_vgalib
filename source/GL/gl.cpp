@@ -17,8 +17,8 @@
 
 #include "io.hpp"
 
+#include "messages/ack.hpp"
 #include "messages/clear_screen.hpp"
-
 #include "messages/begin_primitives.hpp"
 #include "messages/end_primitives.hpp"
 #include "messages/write_vertex.hpp"
@@ -50,7 +50,6 @@ void glEnd()
 {
     EndPrimitives msg; 
     write_msg(io_id, msg);
-    read_msg(io_id, ack);
 }
 
 void glNormal3fv(const GLfloat* v)

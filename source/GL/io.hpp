@@ -25,6 +25,29 @@
 
 
 template <typename T>
+bool read_msg(int io_id, T& msg)
+{
+    uint8_t start_flag = 0;
+    while (start_flag != 0x7e)
+    {
+        read(io_id, &start_flag, sizeof(start_flag));
+    }
+
+    Header header;
+    read(io_id, &header, sizeof(Header));
+    uint16_t crc;
+    read(io_id, &crc, sizeof(crc));
+    if (T::id != header.id)
+    {
+        return false;
+    }
+
+    read(io_id, &msg, sizeof(T));
+    read(io_id, &crc, sizeof(crc));
+    return true;
+}
+
+template <typename T>
 void write_msg(int io_id, T& msg, std::size_t size = 0)
 {
     Header header;
@@ -49,22 +72,15 @@ void write_msg(int io_id, T& msg, std::size_t size = 0)
     
     std::span<const uint8_t> data(buffer, sizeof(Header) + sizeof(T) + 2 * sizeof(uint16_t));
 
-    std::cout << "Dump: {";
-    for (const auto b : data) 
-    {
-        std::cout << std::hex << "0x" << static_cast<int>(b) << ",";
-    }
-    std::cout << std::endl;
- 
     constexpr uint8_t start_flag = 0x7e;
     write(io_id, &start_flag, sizeof(start_flag));
     write(io_id, data.data(), data.size()); 
-    std::cout << "Sent!" << std::endl;
-    
-    std::this_thread::sleep_for(std::chrono::milliseconds(5));
-
+    Ack ack;
+    if (!read_msg(io_id, ack))
+    {
+        std::abort();
+    }
+  
 }
-
-template <typename T>
-void read_msg(int io_id, 
+ 
 
