@@ -29,6 +29,7 @@
 
 #include "messages/header.hpp"
 
+#include "messages/ack.hpp"
 #include "messages/change_mode.hpp"
 #include "messages/draw_line.hpp"
 #include "messages/set_pixel.hpp"
@@ -40,36 +41,36 @@
 static void (*display_callback)(void);
 
 int io_id;
+int rd_id;
 
 void glutInit(int *argcp, char **argv)
 {
-    std::cout << "Opening serial port: " << argv[1] << std::endl;
-    io_id = open(argv[1], O_RDWR | O_NOCTTY | O_SYNC);
-
-    termios tty;
-    
-    if (tcgetattr(io_id, &tty) != 0)
-    {
-        std::cout << "tcgetattr() failed for serial port" << std::endl;
-    }
-
-    cfsetispeed(&tty, B230400);
-    cfsetospeed(&tty, B230400);
-    tty.c_iflag &= ~(INLCR | IGNCR | ICRNL | IXON | IXOFF);
-    tty.c_oflag &= ~(ONLCR | OCRNL);
-    tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-    
-
-    if (tcsetattr(io_id, TCSANOW, &tty) != 0)
-    {
-        std::cout << "tcsetaddr() failed" << std::endl;
-    }
+    io_id = open("/tmp/gpu_com", O_WRONLY);
+    rd_id = open("/tmp/gpu_com_2", O_RDONLY);
 }
 
 void glutSwapBuffers()
 {
+    static std::chrono::time_point<std::chrono::high_resolution_clock> prev;
+    auto now = std::chrono::high_resolution_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(now - prev);
+    prev = now;
+    if (elapsed.count() > 18000 || elapsed.count() < 16000)
+    {
+        std::cout << "Swap buffer offset detected: " << elapsed.count() << std::endl;
+    }
     SwapBuffer msg; 
     write_msg(io_id, msg);
+
+    Ack ack;
+    if (!read_msg(rd_id, ack))
+    {
+        printf("ACK FAILURE!!!!!!!!\n");
+    }
+
+    elapsed = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - now);
+    std::cout << "Waited for ack: " << elapsed.count() << std::endl;
+    
 }
 
 void glutInitDisplayMode(uint32_t mode)
@@ -99,14 +100,23 @@ void glutMainLoop(void)
 {
     while (true) 
     {
-        uint64_t ts = get_us(); 
-        //std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        static uint64_t prev = 0;
+       
         display_callback();
 
-        while (get_us() - ts < 16667)
-        {
+        uint64_t now = get_us();
+        uint64_t elapsed = now - prev;
+        prev = now;
+        std::cout << "Elapsed: " << elapsed << std::endl;
 
+        if (elapsed < 16667)
+        {
+            std::cout << "Waiting for: " << std::chrono::microseconds(16667 - elapsed).count() << std::endl;
+            uint64_t s = get_us();
+            std::this_thread::sleep_for(std::chrono::microseconds(16667 - elapsed));
+            std::cout << "Slept: " << (get_us() - s) << std::endl;
         }
+
     }
 }
 
