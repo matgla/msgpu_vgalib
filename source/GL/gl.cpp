@@ -43,13 +43,13 @@ uint8_t convert_mode(GLenum mode)
 void glBegin(GLenum mode)
 {
     BeginPrimitives msg { .type = convert_mode(mode) };
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 }
 
 void glEnd() 
 {
     EndPrimitives msg; 
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 }
 
 void glNormal3fv(const GLfloat* v)
@@ -65,7 +65,7 @@ void glVertex3fv(const GLfloat* v)
         .z = v[2]
     };
 
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 }
 
 void glVertex3f(GLfloat x, GLfloat y, GLfloat z)
@@ -76,13 +76,13 @@ void glVertex3f(GLfloat x, GLfloat y, GLfloat z)
         .z = z
     };
 
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 }
 
 void glClear(GLbitfield mask)
 {
     ClearScreen msg;
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 }
 
 void glEnable(GLenum cap)

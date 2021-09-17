@@ -24,7 +24,8 @@ extern "C"
 {
 #endif
 
-extern int io_id;
+extern int wr_id;
+extern int rd_id;
 
 typedef float GLfloat;
 typedef double GLdouble;

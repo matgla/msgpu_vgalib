@@ -45,7 +45,7 @@ void gluPerspective(GLdouble fovy,
         .z_far = static_cast<float>(zFar)
     };
 
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 }
 
 

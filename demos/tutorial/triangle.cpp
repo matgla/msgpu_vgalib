@@ -121,11 +121,8 @@ int main(int argc, char* argv[])
         glUseProgram(shaderProgram);
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
-     //   glUseProgram(shader_program);
-      //  glBindVertexArray(vao);
-        
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwPollEvents();
         glfwSwapBuffers(window);

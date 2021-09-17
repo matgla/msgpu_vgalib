@@ -40,12 +40,12 @@
 
 static void (*display_callback)(void);
 
-int io_id;
+int wr_id;
 int rd_id;
 
 void glutInit(int *argcp, char **argv)
 {
-    io_id = open("/tmp/gpu_com", O_WRONLY);
+    wr_id = open("/tmp/gpu_com", O_WRONLY);
     rd_id = open("/tmp/gpu_com_2", O_RDONLY);
 }
 
@@ -60,7 +60,7 @@ void glutSwapBuffers()
         std::cout << "Swap buffer offset detected: " << elapsed.count() << std::endl;
     }
     SwapBuffer msg; 
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 
     Ack ack;
     if (!read_msg(rd_id, ack))
@@ -77,7 +77,7 @@ void glutInitDisplayMode(uint32_t mode)
 {
     // TODO: implement
    // ChangeMode msg {.mode = 12 };
-   // write_msg(io_id, msg);
+   // write_msg(wr_id, msg);
 }
 
 void glutCreateWindow(const char* name)

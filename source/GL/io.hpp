@@ -25,30 +25,30 @@
 
 
 template <typename T>
-bool read_msg(int io_id, T& msg)
+bool read_msg(int wr_id, T& msg)
 {
     uint8_t start_flag = 0;
     while (start_flag != 0x7e)
     {
-        read(io_id, &start_flag, sizeof(start_flag));
+        read(wr_id, &start_flag, sizeof(start_flag));
     }
 
     Header header;
-    read(io_id, &header, sizeof(Header));
+    read(wr_id, &header, sizeof(Header));
     uint16_t crc;
-    read(io_id, &crc, sizeof(crc));
+    read(wr_id, &crc, sizeof(crc));
     if (T::id != header.id)
     {
         return false;
     }
 
-    read(io_id, &msg, sizeof(T));
-    read(io_id, &crc, sizeof(crc));
+    read(wr_id, &msg, sizeof(T));
+    read(wr_id, &crc, sizeof(crc));
     return true;
 }
 
 template <typename T>
-void write_msg(int io_id, T& msg, std::size_t size = 0)
+void write_msg(int wr_id, T& msg, std::size_t size = 0)
 {
     Header header;
     header.id = T::id;
@@ -73,10 +73,10 @@ void write_msg(int io_id, T& msg, std::size_t size = 0)
     std::span<const uint8_t> data(buffer, sizeof(Header) + sizeof(T) + 2 * sizeof(uint16_t));
 
     constexpr uint8_t start_flag = 0x7e;
-    write(io_id, &start_flag, sizeof(start_flag));
-    write(io_id, data.data(), data.size()); 
+    write(wr_id, &start_flag, sizeof(start_flag));
+    write(wr_id, data.data(), data.size()); 
 //    Ack ack;
-//    if (!read_msg(io_id, ack))
+//    if (!read_msg(wr_id, ack))
 //    {
 //        std::abort();
 //    }

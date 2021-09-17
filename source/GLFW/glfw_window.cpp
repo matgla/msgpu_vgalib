@@ -27,49 +27,30 @@
 
 #include "io.hpp"
 
+#include "messages/ack.hpp"
 #include "messages/swap_buffer.hpp"
 
-int io_id;
+int wr_id;
+int rd_id;
 
 int glfwInit(void)
 {
-    const char* port = std::getenv("PORT");
-    std::cout << "Opening serial port: " << port << std::endl;
-
-    io_id = open(port, O_RDWR | O_NOCTTY | O_SYNC);
-
-    termios tty;
-    
-    if (tcgetattr(io_id, &tty) != 0)
-    {
-        std::cout << "tcgetattr() failed for serial port" << std::endl;
-        return GLFW_FALSE;
-    }
-
-    cfsetispeed(&tty, B230400);
-    cfsetospeed(&tty, B230400);
-    tty.c_iflag &= ~(INLCR | IGNCR | ICRNL | IXON | IXOFF);
-    tty.c_oflag &= ~(ONLCR | OCRNL);
-    tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-    
-
-    if (tcsetattr(io_id, TCSANOW, &tty) != 0)
-    {
-        std::cout << "tcsetaddr() failed" << std::endl;
-        return GLFW_FALSE;
-    }
-
+    wr_id = open("/tmp/gpu_com", O_WRONLY);
+    rd_id = open("/tmp/gpu_com_2", O_RDONLY);
     return GLFW_TRUE;
 }
 
 void glfwTerminate(void)
 {
-    close(io_id);
+    close(wr_id);
+    close(rd_id);
 }
+
+static GLFWwindow window;
 
 GLFWwindow* glfwCreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share)
 {
-
+    return &window;
 }
 
 void glfwMakeContextCurrent(GLFWwindow* window)
@@ -79,7 +60,13 @@ void glfwMakeContextCurrent(GLFWwindow* window)
 void glfwSwapBuffers(GLFWwindow* window)
 {
     SwapBuffer msg;
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
+
+    Ack ack;
+    if (!read_msg(rd_id, ack))
+    {
+        printf("ACK FAILURE!!!!!!!!\n");
+    }
 }
 
 void glfwPollEvents(void)
@@ -88,6 +75,7 @@ void glfwPollEvents(void)
 
 int glfwWindowShouldClose(GLFWwindow* window)
 {
+    return 0;
 }
 
 

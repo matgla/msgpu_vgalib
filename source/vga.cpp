@@ -30,19 +30,19 @@
 #include "messages/set_pixel.hpp"
 #include "messages/clear_screen.hpp"
 
-static int io_id;
+static int wr_id;
 static int color;
 
 int vga_init()
 {
-    io_id = open("/tmp/msgpu_virtual_serial_1", O_RDWR);
+    wr_id = open("/tmp/msgpu_virtual_serial_1", O_RDWR);
     return 0;
 }
 
 int vga_clear() 
 {
     ClearScreen msg;
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
     return 0;
 }
 
@@ -60,7 +60,7 @@ int vga_setmode(int mode)
     };
 
     std::cout << "Changing mode to: " << static_cast<int>(new_mode) << std::endl;
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
     return 0;
 }
 
@@ -78,7 +78,7 @@ int vga_drawpixel(int x, int y)
         .color = static_cast<uint16_t>(::color)
     };
 
-    write_msg(io_id, set);
+    write_msg(wr_id, set);
     return 0;
 }
 
@@ -91,6 +91,6 @@ int vga_drawline(int x1, int y1, int x2, int y2)
         .y2 = y2 
     };
 
-    write_msg(io_id, msg);
+    write_msg(wr_id, msg);
 }
 
