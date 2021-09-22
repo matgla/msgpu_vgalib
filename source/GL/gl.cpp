@@ -20,6 +20,8 @@
 #include "io.hpp"
 #include "messages/ack.hpp"
 #include "messages/begin_primitives.hpp"
+#include "messages/bind.hpp"
+#include "messages/buffer_target_type.hpp"
 #include "messages/clear_screen.hpp"
 #include "messages/end_primitives.hpp"
 #include "messages/generate_names.hpp"
@@ -183,6 +185,19 @@ void glGenBuffers(GLsizei n, GLuint *buffers)
 
 void glBindBuffer(GLenum target, GLuint buffer)
 {
+    BindObject msg;
+
+    switch (target)
+    {
+    case GL_ARRAY_BUFFER:
+        msg.target = BufferTargetType::ArrayBuffer;
+        break;
+    default:
+        msg.target = 0;
+    };
+
+    msg.type = BindObjectType::BindBuffer;
+    write_msg(wr_id, msg);
 }
 
 void glBindVertexArray(GLuint array)
