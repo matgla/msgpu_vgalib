@@ -2,9 +2,8 @@
 // Copyright (C) 2021 Mateusz Stadnik
 //
 // This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// it under the terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,30 +21,28 @@
 
 #include <GL/gl.h>
 
+#include <thread>
+
 GLuint vertexbuffer;
 
-GLFWwindow* window;
+GLFWwindow *window;
 
-const char* vertex_shader = 
-"#version 400\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main() {"
-"  gl_Position = vec4(aPos, 1.0);"
-"}";
+const char *vertex_shader = "#version 400\n"
+                            "layout (location = 0) in vec3 aPos;\n"
+                            "void main() {"
+                            "  gl_Position = vec4(aPos, 1.0);"
+                            "}";
 
-const char* fragment_shader = 
-"#version 400\n"
-"out vec4 frag_color;"
-"void main() {"
-"  frag_color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
-"}";
+const char *fragment_shader = "#version 400\n"
+                              "out vec4 frag_color;"
+                              "void main() {"
+                              "  frag_color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
+                              "}";
 
-static const GLfloat colors[] = {0.9, 0.9, 0.0, 1.0f,
-    0.0f, 1.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 1.0f, 1.0f
-};
+static const GLfloat colors[] = {0.9,  0.9,  0.0,  1.0f, 0.0f, 1.0f,
+                                 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f};
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     if (!glfwInit())
     {
@@ -54,7 +51,7 @@ int main(int argc, char* argv[])
     }
 
     window = glfwCreateWindow(320, 240, "Triangle Demo", nullptr, nullptr);
-    if (window == NULL) 
+    if (window == NULL)
     {
         printf("Failed to open GLFW window\n");
         glfwTerminate();
@@ -63,7 +60,7 @@ int main(int argc, char* argv[])
 
     glfwMakeContextCurrent(window);
 
-    if (glewInit() != GLEW_OK) 
+    if (glewInit() != GLEW_OK)
     {
         printf("Failed to initialize GLEW\n");
         glfwTerminate();
@@ -74,11 +71,7 @@ int main(int argc, char* argv[])
 
     glClearColor(0.4f, 0.4f, 0.4f, 0.0f);
 
-    float points[] = {
-        0.0f,  0.5f,  0.0f,
-        0.5f, -0.5f,  0.0f,
-       -0.5f, -0.5f,  0.0f
-    };
+    float points[] = {0.0f, 0.5f, 0.0f, 0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f};
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
@@ -95,12 +88,12 @@ int main(int argc, char* argv[])
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    GLuint vertexShader; 
+    GLuint vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertex_shader, NULL);
     glCompileShader(vertexShader);
 
-    GLuint fragmentShader; 
+    GLuint fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragment_shader, NULL);
     glCompileShader(fragmentShader);
@@ -111,10 +104,10 @@ int main(int argc, char* argv[])
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-    
+
     glUseProgram(shaderProgram);
 
-    do 
+    do
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -122,11 +115,13 @@ int main(int argc, char* argv[])
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
-
         glfwPollEvents();
         glfwSwapBuffers(window);
-    } while (glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+
+        // for now I don't know how to set framelimit
+        std::this_thread::sleep_for(std::chrono::milliseconds(31));
+    } while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+             glfwWindowShouldClose(window) == 0);
 
     glfwTerminate();
 }
