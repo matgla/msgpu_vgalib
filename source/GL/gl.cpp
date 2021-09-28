@@ -16,16 +16,19 @@
 #include "GL/gl.h"
 
 #include <algorithm>
+#include <fstream>
 
 #include "io.hpp"
 #include "messages/ack.hpp"
 #include "messages/begin_primitives.hpp"
+#include "messages/begin_program_write.hpp"
 #include "messages/bind.hpp"
 #include "messages/buffer_target_type.hpp"
 #include "messages/clear_screen.hpp"
 #include "messages/draw_arrays.hpp"
 #include "messages/end_primitives.hpp"
 #include "messages/generate_names.hpp"
+#include "messages/program_write.hpp"
 #include "messages/write_buffer_data.hpp"
 #include "messages/write_vertex.hpp"
 
@@ -286,6 +289,31 @@ void glUseProgram(GLuint program)
 
 void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length)
 {
+    std::ifstream file(reinterpret_cast<const char *>(string),
+                       std::ifstream::ate | std::ifstream::binary);
+
+    const std::size_t file_size = file.tellg();
+    BeginProgramWrite msg{
+        .type = VertexShader, // not able to deduce here
+        .size = file_size,
+    };
+
+    write_msg(wr_id, msg);
+
+    std::size_t s = 0;
+    uint8_t part  = 0;
+    file.seekg(0, file.beg);
+    while (s < file_size)
+    {
+        std::size_t size =
+            std::min(static_cast<std::size_t>(file.tellg()), sizeof(ProgramWrite::data));
+        ProgramWrite p{
+            .size = size,
+            .part = part++,
+        };
+        file.read(reinterpret_cast<char *>(&p.data[0]), size);
+        write_msg(wr_id, p);
+    }
 }
 
 void glDrawArrays(GLenum mode, GLint first, GLsizei count)
@@ -298,4 +326,3 @@ void glDrawArrays(GLenum mode, GLint first, GLsizei count)
 
     write_msg(wr_id, msg);
 }
-

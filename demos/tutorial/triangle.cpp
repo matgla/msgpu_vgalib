@@ -27,12 +27,15 @@ GLuint vertexbuffer;
 
 GLFWwindow *window;
 
+#ifdef COMPILED_SHADER
+const char *vertex_shader = VERTEX_SHADER_PATH;
+#else
 const char *vertex_shader = "#version 400\n"
                             "layout (location = 0) in vec3 aPos;\n"
                             "void main() {"
                             "  gl_Position = vec4(aPos, 1.0);"
                             "}";
-
+#endif
 const char *fragment_shader = "#version 400\n"
                               "out vec4 frag_color;"
                               "void main() {"

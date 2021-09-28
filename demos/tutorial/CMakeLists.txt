@@ -28,3 +28,17 @@ target_link_libraries(tutorial_triangle
         msgpu_glfw
 )
 
+add_library (vertex_shader SHARED)
+
+target_sources(vertex_shader 
+    PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/vertex_shader.cpp
+)
+
+target_compile_options(vertex_shader PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/test.h")
+
+target_compile_options(tutorial_triangle 
+    PRIVATE 
+        -DCOMPILED_SHADER 
+        -DVERTEX_SHADER_PATH=\"$<TARGET_FILE:vertex_shader>\"
+)
