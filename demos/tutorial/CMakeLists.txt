@@ -37,8 +37,19 @@ target_sources(vertex_shader
 
 target_compile_options(vertex_shader PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/test.h")
 
-target_compile_options(tutorial_triangle 
+add_library (fragment_shader SHARED)
+
+target_sources(fragment_shader 
+    PRIVATE 
+        ${CMAKE_CURRENT_SOURCE_DIR}/fragment_shader.cpp
+)
+
+target_compile_options(fragment_shader PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/test.h")
+
+
+target_compile_options(tutorial_triangle
     PRIVATE 
         -DCOMPILED_SHADER 
         -DVERTEX_SHADER_PATH=\"$<TARGET_FILE:vertex_shader>\"
+        -DFRAGMENT_SHADER_PATH=\"$<TARGET_FILE:fragment_shader>\"
 )

@@ -1,11 +1,11 @@
-
-void* argument_0;
-
 #define layout(arg) extern __attribute__((alias(argument_##arg)))
 
-extern vec3 aPos __attribute__((alias("argument_0")));
+vec3 aPos = *reinterpret_cast<vec3 *>(argument_0);
+
+#include <cstdio>
 
 int main()
 {
+    printf("Vertex shader called\n");
     gl_Position = vec4(aPos, 1.0);
 }

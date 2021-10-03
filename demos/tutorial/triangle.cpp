@@ -36,11 +36,15 @@ const char *vertex_shader = "#version 400\n"
                             "  gl_Position = vec4(aPos, 1.0);"
                             "}";
 #endif
+#ifdef COMPILED_SHADER
+const char *fragment_shader = FRAGMENT_SHADER_PATH;
+#else
 const char *fragment_shader = "#version 400\n"
                               "out vec4 frag_color;"
                               "void main() {"
                               "  frag_color = vec4(1.0f, 0.5f, 0.2f, 1.0f);"
                               "}";
+#endif
 
 static const GLfloat colors[] = {0.9,  0.9,  0.0,  1.0f, 0.0f, 1.0f,
                                  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f};
@@ -91,7 +95,9 @@ int main(int argc, char *argv[])
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    printf(" -- Vertex shader\n");
     GLuint vertexShader;
+
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertex_shader, NULL);
     glCompileShader(vertexShader);

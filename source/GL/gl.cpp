@@ -16,10 +16,13 @@
 #include "GL/gl.h"
 
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 
 #include "io.hpp"
 #include "messages/ack.hpp"
+#include "messages/allocate_program.hpp"
+#include "messages/attach_shader.hpp"
 #include "messages/begin_primitives.hpp"
 #include "messages/begin_program_write.hpp"
 #include "messages/bind.hpp"
@@ -29,6 +32,7 @@
 #include "messages/end_primitives.hpp"
 #include "messages/generate_names.hpp"
 #include "messages/program_write.hpp"
+#include "messages/use_program.hpp"
 #include "messages/write_buffer_data.hpp"
 #include "messages/write_vertex.hpp"
 
@@ -106,8 +110,8 @@ void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 
 constexpr uint8_t to_rgb332(float r, float g, float b)
 {
-    return static_cast<uint8_t>(r * 8) << 5 | static_cast<uint8_t>(g * 8) << 2 |
-           static_cast<uint8_t>(b * 4);
+    return static_cast<uint8_t>(roundf(r * 7)) << 5 | static_cast<uint8_t>(roundf(g * 7)) << 2 |
+           static_cast<uint8_t>(roundf(b * 3));
 }
 
 void glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
@@ -263,8 +267,29 @@ void glEnableVertexAttribArray(GLuint index)
 {
 }
 
+uint8_t convert_shader_type(GLenum shaderType)
+{
+    switch (shaderType)
+    {
+    case GL_VERTEX_SHADER:
+        return AllocateProgramType::AllocateVertexShader;
+    case GL_FRAGMENT_SHADER:
+        return AllocateProgramType::AllocateFragmentShader;
+    }
+    return 0;
+}
+
 GLuint glCreateShader(GLenum shaderType)
 {
+    AllocateProgramRequest req{
+        .program_type = convert_shader_type(shaderType),
+    };
+
+    write_msg(wr_id, req);
+
+    AllocateProgramResponse resp;
+    read_msg(rd_id, resp);
+    return resp.program_id;
 }
 
 void glCompileShader(GLuint shader)
@@ -273,10 +298,26 @@ void glCompileShader(GLuint shader)
 
 GLuint glCreateProgram(void)
 {
+    AllocateProgramRequest req{
+        .program_type = AllocateProgramType::AllocateProgram,
+    };
+
+    write_msg(wr_id, req);
+
+    AllocateProgramResponse resp;
+
+    read_msg(rd_id, resp);
+    return resp.program_id;
 }
 
 void glAttachShader(GLuint program, GLuint shader)
 {
+    AttachShader req{
+        .program_id = static_cast<uint8_t>(program),
+        .shader_id  = static_cast<uint8_t>(shader),
+    };
+
+    write_msg(wr_id, req);
 }
 
 void glLinkProgram(GLuint program)
@@ -285,34 +326,44 @@ void glLinkProgram(GLuint program)
 
 void glUseProgram(GLuint program)
 {
+    UseProgram req{.program_id = static_cast<uint8_t>(program)};
+
+    write_msg(wr_id, req);
 }
 
 void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length)
 {
-    std::ifstream file(reinterpret_cast<const char *>(string),
-                       std::ifstream::ate | std::ifstream::binary);
+    printf("Here come the crash again\n");
+    const char *filename = *string;
+    printf("Filename: %s\n", filename);
+    std::ifstream file(filename, std::ifstream::ate | std::ifstream::binary);
 
-    const std::size_t file_size = file.tellg();
+    if (!file)
+    {
+        printf("Can't open file: %s\n", filename);
+    }
+    std::size_t file_size = file.tellg();
+
+    printf("Sending begin program write with size: %d\n", file_size);
     BeginProgramWrite msg{
-        .type = VertexShader, // not able to deduce here
-        .size = file_size,
+        .program_id = static_cast<uint8_t>(shader), // not able to deduce here
+        .size       = file_size,
     };
 
     write_msg(wr_id, msg);
 
-    std::size_t s = 0;
-    uint8_t part  = 0;
+    uint8_t part = 0;
     file.seekg(0, file.beg);
-    while (s < file_size)
+    while (file_size > 0)
     {
-        std::size_t size =
-            std::min(static_cast<std::size_t>(file.tellg()), sizeof(ProgramWrite::data));
+        std::size_t size = std::min(file_size, sizeof(ProgramWrite::data));
         ProgramWrite p{
             .size = size,
             .part = part++,
         };
         file.read(reinterpret_cast<char *>(&p.data[0]), size);
         write_msg(wr_id, p);
+        file_size -= size;
     }
 }
 
