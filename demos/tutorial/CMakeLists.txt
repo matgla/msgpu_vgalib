@@ -35,7 +35,11 @@ target_sources(vertex_shader
         ${CMAKE_CURRENT_SOURCE_DIR}/vertex_shader.cpp
 )
 
-target_compile_options(vertex_shader PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/test.h")
+target_link_libraries(vertex_shader 
+    PRIVATE 
+        msgpu::interface::shader
+)
+
 
 add_library (fragment_shader SHARED)
 
@@ -44,7 +48,10 @@ target_sources(fragment_shader
         ${CMAKE_CURRENT_SOURCE_DIR}/fragment_shader.cpp
 )
 
-target_compile_options(fragment_shader PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/test.h")
+target_link_libraries(fragment_shader 
+    PRIVATE 
+        msgpu::interface::shader
+)
 
 
 target_compile_options(tutorial_triangle

@@ -14,105 +14,122 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once 
+#pragma once
 
-#include <stdint.h>
 #include <cstddef>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-extern int wr_id;
-extern int rd_id;
+    extern int wr_id;
+    extern int rd_id;
 
-typedef float GLfloat;
-typedef double GLdouble;
-typedef int GLint;
-typedef unsigned int GLuint;
+    typedef float GLfloat;
+    typedef double GLdouble;
+    typedef int GLint;
+    typedef unsigned int GLuint;
 
-typedef uint32_t GLenum;
-typedef uint32_t GLbitfield;
-typedef int GLsizei;
-typedef uint32_t GLsizeiptr;
-typedef bool GLboolean;
-typedef char GLchar;
+    typedef uint32_t GLenum;
+    typedef uint32_t GLbitfield;
+    typedef int GLsizei;
+    typedef uint32_t GLsizeiptr;
+    typedef bool GLboolean;
+    typedef char GLchar;
 
 #define GL_TRUE 1
 #define GL_FALSE 0
 
-#define GL_QUADS 1 
-#define GL_TRIANGLES 2 
+#define GL_QUADS 1
+#define GL_TRIANGLES 2
 
 #define GL_COLOR_BUFFER_BIT (1 << 1)
 #define GL_DEPTH_BUFFER_BIT (1 << 2)
 
-#define GL_LIGHT0 0 
-#define GL_DIFFUSE 0 
-#define GL_POSITION 0 
-#define GL_LIGHTING 0 
-#define GL_DEPTH_TEST 0 
-#define GL_PROJECTION 0 
-#define GL_MODELVIEW 0 
+#define GL_LIGHT0 0
+#define GL_DIFFUSE 0
+#define GL_POSITION 0
+#define GL_LIGHTING 0
+#define GL_DEPTH_TEST 0
+#define GL_PROJECTION 0
+#define GL_MODELVIEW 0
 
 #define GL_VERTEX_ARRAY 0
 #define GL_COLOR_ARRAY 1
 
-#define GL_FLOAT 1 
+#define GL_FLOAT 1
 
-void glEnableClientState(GLenum attrib);
+#define GL_LESS 1
 
-void glGenVertexArrays(GLsizei n, GLuint *arrays);
+    void glEnableClientState(GLenum attrib);
 
-void glGenBuffers(GLsizei n, GLuint *buffers);
+    void glGenVertexArrays(GLsizei n, GLuint *arrays);
+    void glDeleteVertexArrays(GLsizei m, const GLuint *arrays);
+
+    void glGenBuffers(GLsizei n, GLuint *buffers);
+    void glDeleteBuffers(GLsizei n, const GLuint *buffers);
 
 #define GL_ARRAY_BUFFER 1
-void glBindBuffer(GLenum target, GLuint buffer);
+    void glBindBuffer(GLenum target, GLuint buffer);
 
-void glBindVertexArray(GLuint array);
+    void glBindVertexArray(GLuint array);
 
-#define GL_STATIC_DRAW  1  
+#define GL_STATIC_DRAW 1
 #define GL_DYNAMIC_DRAW 2
-void glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage);
+    void glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage);
 
-void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
+    void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized,
+                               GLsizei stride, const void *pointer);
 
-void glEnableVertexAttribArray(GLuint index);
+    void glEnableVertexAttribArray(GLuint index);
+    void glDisableVertexAttribArray(GLuint index);
 
-#define GL_VERTEX_SHADER 1 
+#define GL_VERTEX_SHADER 1
 #define GL_FRAGMENT_SHADER 2
-GLuint glCreateShader(GLenum shaderType);
-void glCompileShader(GLuint shader);
-GLuint glCreateProgram(void);
-void glAttachShader(GLuint program, 
-    GLuint shader);
-void glLinkProgram(GLuint program);
-void glUseProgram(GLuint program);
-void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string, const GLint *length);
+    GLuint glCreateShader(GLenum shaderType);
+    void glCompileShader(GLuint shader);
+    GLuint glCreateProgram(void);
+    void glDeleteProgram(GLuint program);
+    void glGetProgramiv(GLuint program, GLenum pname, GLint *params);
+#define GL_COMPILE_STATUS 1
+#define GL_LINK_STATUS 2
+#define GL_INFO_LOG_LENGTH 3
+    void glGetShaderiv(GLuint shader, GLenum pname, GLint *params);
+    void glGetShaderInfoLog(GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog);
+    void glAttachShader(GLuint program, GLuint shader);
+    void glLinkProgram(GLuint program);
+    void glDetachShader(GLuint program, GLuint shader);
+    void glUseProgram(GLuint program);
+    void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string,
+                        const GLint *length);
+    void glDeleteShader(GLuint shader);
+    void glDrawArrays(GLenum mode, GLint first, GLsizei count);
 
-void glDrawArrays(GLenum mode, GLint first, GLsizei count);
+    void glBegin(GLenum mode);
+    void glEnd();
 
-void glBegin(GLenum mode);
-void glEnd();
+    void glNormal3fv(const GLfloat *v);
+    void glVertex3f(GLfloat x, GLfloat y, GLfloat z);
+    void glVertex3fv(const GLfloat *v);
 
-void glNormal3fv(const GLfloat* v);
-void glVertex3f(GLfloat x, GLfloat y, GLfloat z);
-void glVertex3fv(const GLfloat* v);
+    // Clear API
 
-// Clear API 
+    void glClear(GLbitfield mask);
+    void glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 
-void glClear(GLbitfield mask);
-void glClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+    void glEnable(GLenum cap);
+    void glLightfv(GLenum light, GLenum pname, const GLfloat *params);
+    void glMatrixMode(GLenum mode);
+    void glTranslatef(GLfloat x, GLfloat y, GLfloat z);
+    void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
 
-void glEnable(GLenum cap);
-void glLightfv(GLenum light, GLenum pname, const GLfloat* params);
-void glMatrixMode(GLenum mode);
-void glTranslatef(GLfloat x, GLfloat y, GLfloat z);
-void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+    void glDepthFunc(GLenum func);
+    GLint glGetUniformLocation(GLuint program, const GLchar *name);
+    void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose,
+                            const GLfloat *value);
 
 #ifdef __cplusplus
 }
 #endif
-
-

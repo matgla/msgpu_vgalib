@@ -1,25 +1,32 @@
 {
-    "dependencies": [{
-        "name": "eul",
-        "link": "https://github.com/matgla/EmbeddedUtilityLibraries.git",
-        "type": "git",
-        "version": "master",
-        "directory": "eul",
-        "target": "eul",
-        "options": {
-            "cmake_variables": {
-                "DISABLE_TESTS": "ON"
+    "dependencies": [
+        {
+            "name": "eul",
+            "link": "https://github.com/matgla/EmbeddedUtilityLibraries.git",
+            "type": "git",
+            "version": "master",
+            "directory": "eul",
+            "target": "eul",
+            "options": {
+                "cmake_variables": {
+                    "DISABLE_TESTS": "ON"
+                }
             }
+        },
+        {
+            "link": "https://github.com/matgla/msgpu_interface.git",
+            "type": "git",
+            "version": "main",
+            "directory": "msgpu_interface",
+            "target": "msgpu_interface",
+            "options": {}
+        },
+        {
+            "link": "https://github.com/g-truc/glm.git",
+            "type": "git",
+            "version": "0.9.9.8",
+            "target": "glm",
+            "options": {}
         }
-    }, 
-    {
-        "link": "https://github.com/matgla/msgpu_interface.git",
-        "type": "git",
-        "version": "main",
-        "directory": "msgpu_interface",
-        "target": "msgpu_interface",
-        "options": {
-        }
-    }
     ]
 }

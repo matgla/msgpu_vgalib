@@ -32,6 +32,7 @@
 #include "messages/end_primitives.hpp"
 #include "messages/generate_names.hpp"
 #include "messages/program_write.hpp"
+#include "messages/set_vertex_attrib.hpp"
 #include "messages/use_program.hpp"
 #include "messages/write_buffer_data.hpp"
 #include "messages/write_vertex.hpp"
@@ -105,6 +106,18 @@ void glTranslatef(GLfloat x, GLfloat y, GLfloat z)
 }
 
 void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+{
+}
+
+void glDepthFunc(GLenum func)
+{
+}
+
+GLint glGetUniformLocation(GLuint program, const GLchar *name)
+{
+}
+
+void glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
 }
 
@@ -191,9 +204,17 @@ void glGenVertexArrays(GLsizei n, GLuint *arrays)
     __generateNames(n, arrays, ObjectType::VertexArray);
 }
 
+void glDeleteVertexArrays(GLsizei m, const GLuint *arrays)
+{
+}
+
 void glGenBuffers(GLsizei n, GLuint *buffers)
 {
     __generateNames(n, buffers, ObjectType::Buffer);
+}
+
+void glDeleteBuffers(GLsizei n, const GLuint *buffers)
+{
 }
 
 BufferTargetType convert_buffer_target_type(GLenum target)
@@ -261,9 +282,21 @@ void glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage
 void glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized,
                            GLsizei stride, const void *pointer)
 {
+    SetVertexAttrib msg{.index      = index,
+                        .size       = size,
+                        .normalized = normalized,
+                        .type       = type,
+                        .stride     = stride,
+                        .pointer    = reinterpret_cast<std::size_t>(pointer)};
+
+    write_msg(wr_id, msg);
 }
 
 void glEnableVertexAttribArray(GLuint index)
+{
+}
+
+void glDisableVertexAttribArray(GLuint index)
 {
 }
 
@@ -310,6 +343,22 @@ GLuint glCreateProgram(void)
     return resp.program_id;
 }
 
+void glDeleteProgram(GLuint program)
+{
+}
+
+void glGetProgramiv(GLuint program, GLenum pname, GLint *params)
+{
+}
+
+void glGetShaderiv(GLuint shader, GLenum pname, GLint *params)
+{
+}
+
+void glGetShaderInfoLog(GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog)
+{
+}
+
 void glAttachShader(GLuint program, GLuint shader)
 {
     AttachShader req{
@@ -321,6 +370,10 @@ void glAttachShader(GLuint program, GLuint shader)
 }
 
 void glLinkProgram(GLuint program)
+{
+}
+
+void glDetachShader(GLuint program, GLuint shader)
 {
 }
 
@@ -365,6 +418,10 @@ void glShaderSource(GLuint shader, GLsizei count, const GLchar *const *string, c
         write_msg(wr_id, p);
         file_size -= size;
     }
+}
+
+void glDeleteShader(GLuint shader)
+{
 }
 
 void glDrawArrays(GLenum mode, GLint first, GLsizei count)

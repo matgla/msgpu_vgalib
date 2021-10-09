@@ -14,35 +14,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-add_executable(cube)
+add_library(common_shaders)
 
-target_sources(cube 
+target_sources(common_shaders
+    PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}/load_shaders.hpp 
     PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/cube.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/load_shaders.cpp
 )
 
-target_link_libraries(cube 
-    PRIVATE 
+target_include_directories(common_shaders
+    PUBLIC 
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+if (NOT USE_REAL_GL)
+
+target_link_libraries(common_shaders
+    PUBLIC 
         msgpu_libgl
-        msgpu_libglut
+        msgpu_libglew
+        msgpu_glfw
 )
 
-add_executable(triangle)
-
-target_sources(triangle
-    PRIVATE 
-        ${CMAKE_CURRENT_SOURCE_DIR}/triangle.cpp
+target_compile_definitions(common_shaders
+    PUBLIC 
+        -DCOMPILED_SHADER
 )
 
-target_link_libraries(triangle
-    PRIVATE 
-        msgpu_libgl
-        msgpu_libglut
-        msgpu_messages
-        eul_crc
-)
+endif()
 
-target_include_directories(triangle PRIVATE ${PROJECT_SOURCE_DIR}/source/GL)
-
+add_subdirectory (colored_triangle)
+add_subdirectory (cube)
 add_subdirectory (tutorial)
 
